@@ -1,3 +1,80 @@
 from django.shortcuts import render
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
-# Create your views here.
+from accounts.models import User
+from accounts.serializers import UserSerializer, RegisterSerializer, UpdateProfileSerializer, RoleUpdateSerializer  
+
+from accounts.permissions import IsSuperAdmin, IsAdmin, IsEditor, IsJournalist, IsReader
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+    def get_permissions(self):
+        if self.action in ['create']:
+            permission_classes = [IsSuperAdmin]
+        elif self.action in ['update_role']:
+            permission_classes = [IsSuperAdmin]
+        elif self.action in ['update', 'partial_update']:
+            permission_classes = [IsAdmin | IsEditor | IsJournalist | IsReader]
+        else:
+            permission_classes = [IsSuperAdmin | IsAdmin | IsEditor | IsJournalist | IsReader]
+        return [permission() for permission in permission_classes]
+    
+    @action(detail=False, methods=['post'], url_path='register')
+    def register(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True, methods=['put'], url_path='update-profile', permission_classes=[IsAdmin | IsEditor | IsJournalist | IsReader])
+    def update_profile(self, request, pk=None):
+        user = self.get_object()
+        if request.user != user and not request.user.role in ['admin', 'superadmin']:
+            return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        serializer = UpdateProfileSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(UserSerializer(user).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True, methods=['put'], url_path='update-role', permission_classes=[IsSuperAdmin])
+    def update_role(self, request, pk=None):
+        user = self.get_object()
+        serializer = RoleUpdateSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(UserSerializer(user).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'], url_path='me')
+    def me(self, request):
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Authentication credentials were not provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'], url_path='search')
+    def search(self, request):
+        query = request.query_params.get('q', '')
+        if query:
+            users = User.objects.filter(email__icontains=query) | User.objects.filter(first_name__icontains=query) | User.objects.filter(last_name__icontains=query)
+            serializer = UserSerializer(users, many=True)
+            return Response(serializer.data)
+        return Response({'detail': 'Please provide a search query.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True, methods=['delete'], url_path='deactivate', permission_classes=[IsAdmin | IsSuperAdmin])
+    def deactivate(self, request, pk=None):
+        user = self.get_object()
+        if request.user != user and not request.user.role in ['admin', 'superadmin']:
+            return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        user.is_active = False
+        user.save()
+        return Response({'detail': 'User deactivated successfully.'}, status=status.HTTP_200_OK)

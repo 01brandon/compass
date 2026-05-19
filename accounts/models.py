@@ -27,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-id']
         
     def __str__(self):
         return self.email

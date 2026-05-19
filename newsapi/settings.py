@@ -79,6 +79,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'newsapi.wsgi.application'
 
+AUTH_USER_MODEL = 'accounts.User'  # Custom user model
+
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases

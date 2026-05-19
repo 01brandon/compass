@@ -19,3 +19,15 @@ class IsJournalist(BasePermission):
 class IsReader(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role in ['reader', 'journalist', 'editor', 'admin', 'superadmin']
+
+
+class HasRole(BasePermission):
+    """Permission that checks whether the user has any of the given roles.
+
+    Instantiate with a list of role strings, e.g. `HasRole(['admin','editor'])`.
+    """
+    def __init__(self, roles=None):
+        self.roles = roles or []
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role in self.roles

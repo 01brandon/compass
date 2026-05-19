@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'first_name', 'last_name', 'full_name', 'phone', 'profile_picture', 'role']
-        read_only_fields = ['id', 'email', 'full_name']
+        read_only_fields = ['id', 'email', 'full_name', 'role']
         
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8, required=True, style={'input_type': 'password'})
@@ -24,7 +24,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', '')
         )
         return user
-    
+
 class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

@@ -54,6 +54,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if not user.check_password(password):
             return Response({'detail': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+        if not user.is_active:
+            return Response({'detail': 'User account is deactivated.'}, status=status.HTTP_403_FORBIDDEN)
+
         from rest_framework_simplejwt.tokens import RefreshToken
 
         refresh = RefreshToken.for_user(user)

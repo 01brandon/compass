@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 from accounts.models import User
 from accounts.serializers import UserSerializer, RegisterSerializer, UpdateProfileSerializer, RoleUpdateSerializer  
@@ -13,18 +14,18 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
-    def get_permissions(self):
-        if self.action in ['create']:
-            permission_classes = [IsSuperAdmin]
-        elif self.action in ['update_role']:
-            permission_classes = [IsSuperAdmin]
-        elif self.action in ['update', 'partial_update']:
-            permission_classes = [IsAdmin | IsEditor | IsJournalist | IsReader]
-        else:
-            permission_classes = [IsSuperAdmin | IsAdmin | IsEditor | IsJournalist | IsReader]
-        return [permission() for permission in permission_classes]
+    # def get_permissions(self):
+    #     if self.action in ['create']:
+    #         permission_classes = [AllowAny]
+    #     elif self.action in ['update_role']:
+    #         permission_classes = [IsSuperAdmin]
+    #     elif self.action in ['update', 'partial_update']:
+    #         permission_classes = [IsAdmin | IsEditor | IsJournalist | IsReader]
+    #     else:
+    #         permission_classes = [IsSuperAdmin | IsAdmin | IsEditor | IsJournalist | IsReader]
+    #     return [permission() for permission in permission_classes]
     
-    @action(detail=False, methods=['post'], url_path='register')
+    @action(detail=False, methods=['post'], url_path='register', permission_classes=[AllowAny])
     def register(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():

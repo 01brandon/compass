@@ -78,3 +78,13 @@ class UserViewSet(viewsets.ModelViewSet):
         user.is_active = False
         user.save()
         return Response({'detail': 'User deactivated successfully.'}, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['post'], url_path='activate', permission_classes=[IsAdmin | IsSuperAdmin])
+    def activate(self, request, pk=None):
+        user = self.get_object()
+        if request.user != user and not request.user.role in ['admin', 'superadmin']:
+            return Response({'detail': 'You do not have permission to perform this action.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        user.is_active = True
+        user.save()
+        return Response({'detail': 'User activated successfully.'}, status=status.HTTP_200_OK)

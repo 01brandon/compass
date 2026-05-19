@@ -75,7 +75,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(UserSerializer(user).data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(detail=True, methods=['put'], url_path='update-role', permission_classes=[IsSuperAdmin])
+    @action(detail=True, methods=['put'], url_path='change-role', permission_classes=[IsSuperAdmin])
     def update_role(self, request, pk=None):
         user = self.get_object()
         serializer = RoleUpdateSerializer(user, data=request.data)

@@ -1,0 +1,967 @@
+{
+  "info": {
+    "_postman_id": "2f7e4e5a-1f8b-4a33-8d9d-6d0c0d5fd6f1",
+    "name": "Compass API",
+    "description": "Postman collection for the Compass Django API. It includes auth, user, article, and category endpoints with sample request payloads.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "accessToken",
+      "value": "paste-access-token-here"
+    },
+    {
+      "key": "refreshToken",
+      "value": "paste-refresh-token-here"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "articleSlug",
+      "value": "sample-article-slug"
+    },
+    {
+      "key": "categorySlug",
+      "value": "sample-category-slug"
+    },
+    {
+      "key": "categoryId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "Register via auth endpoint",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"reader@example.com\",\n  \"first_name\": \"Amina\",\n  \"last_name\": \"Khan\",\n  \"password\": \"StrongPass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/auth/register/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "auth",
+                    "register"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Login via auth endpoint",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"reader@example.com\",\n  \"password\": \"StrongPass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/auth/login/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "auth",
+                    "login"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Users",
+          "item": [
+            {
+              "name": "List users",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create user",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"journalist@example.com\",\n  \"first_name\": \"Maya\",\n  \"last_name\": \"Patel\",\n  \"password\": \"StrongPass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Retrieve user",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update user",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"Maya\",\n  \"last_name\": \"Patel\",\n  \"phone\": \"+15550123456\",\n  \"profile_picture\": \"https://res.cloudinary.com/demo/image/upload/sample.jpg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Partial update user",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"phone\": \"+15550987654\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete user",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Register via users endpoint",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"reader2@example.com\",\n  \"first_name\": \"Sara\",\n  \"last_name\": \"Ali\",\n  \"password\": \"StrongPass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/register/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "register"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Login via users endpoint",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"reader2@example.com\",\n  \"password\": \"StrongPass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/login/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "login"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Me",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/me/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "me"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Search users",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/search/?q=maya",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "maya"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update user role",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"role\": \"editor\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/change-role/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}",
+                    "change-role"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update profile",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"Maya\",\n  \"last_name\": \"Patel\",\n  \"phone\": \"+15550123456\",\n  \"profile_picture\": \"https://res.cloudinary.com/demo/image/upload/sample.jpg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/update-profile/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}",
+                    "update-profile"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Deactivate user",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/deactivate/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}",
+                    "deactivate"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Activate user",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/accounts/users/{{userId}}/activate/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "accounts",
+                    "users",
+                    "{{userId}}",
+                    "activate"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Articles",
+      "item": [
+        {
+          "name": "Articles",
+          "item": [
+            {
+              "name": "List articles",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/?status=published&category={{categoryId}}&is_featured=true&search=climate&ordering=-published_at",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "published"
+                    },
+                    {
+                      "key": "category",
+                      "value": "{{categoryId}}"
+                    },
+                    {
+                      "key": "is_featured",
+                      "value": "true"
+                    },
+                    {
+                      "key": "search",
+                      "value": "climate"
+                    },
+                    {
+                      "key": "ordering",
+                      "value": "-published_at"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create article",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"category\": 1,\n  \"title\": \"New climate policy update\",\n  \"slug\": \"new-climate-policy-update\",\n  \"excerpt\": \"A concise summary of the new climate policy update.\",\n  \"content\": \"Full article content goes here.\",\n  \"is_featured\": false,\n  \"status\": \"draft\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Retrieve article",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/{{articleSlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles",
+                    "{{articleSlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update article",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"category\": 1,\n  \"title\": \"Updated climate policy update\",\n  \"slug\": \"updated-climate-policy-update\",\n  \"excerpt\": \"Updated summary text.\",\n  \"content\": \"Updated full article content.\",\n  \"is_featured\": true,\n  \"status\": \"review\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/{{articleSlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles",
+                    "{{articleSlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Partial update article",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_featured\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/{{articleSlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles",
+                    "{{articleSlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete article",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/{{articleSlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles",
+                    "{{articleSlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Publish article",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/{{articleSlug}}/publish/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles",
+                    "{{articleSlug}}",
+                    "publish"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Unpublish article",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/articles/{{articleSlug}}/unpublish/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "articles",
+                    "{{articleSlug}}",
+                    "unpublish"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "List categories",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/categories/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Create category",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"World News\",\n  \"slug\": \"world-news\",\n  \"description\": \"International current affairs and global reporting.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/categories/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Retrieve category",
+              "request": {
+                "method": "GET",
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/categories/{{categorySlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories",
+                    "{{categorySlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Update category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"World News\",\n  \"slug\": \"world-news\",\n  \"description\": \"Updated category description.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/categories/{{categorySlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories",
+                    "{{categorySlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Partial update category",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Short updated description.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/categories/{{categorySlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories",
+                    "{{categorySlug}}"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Delete category",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/categories/{{categorySlug}}/",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "categories",
+                    "{{categorySlug}}"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -82,7 +82,40 @@ class ArticleViewSet(viewsets.ModelViewSet):
             'detail': 'Article published successfully',
             'article': serializer.data
         })
+    
+    @action(detail=True, methods=['post'])
+    def unpublish(self, request, slug=None):
+
+        article = self.get_object()
+
+        if request.user.role not in [
+            'admin',
+            'editor',
+            'superadmin'
+        ]:
+            return Response(
+                {'detail': 'Not allowed to unpublish'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        if article.status != Article.Status.PUBLISHED:
+            return Response(
+                {'detail': 'Article is not published'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        article.status = Article.Status.DRAFT
+        article.published_at = None
+        article.save()
+
+        serializer = self.get_serializer(article)
+
+        return Response({
+            'detail': 'Article unpublished successfully',
+            'article': serializer.data
+        })
         
+    
 class CategoryViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()

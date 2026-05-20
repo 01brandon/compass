@@ -7,13 +7,47 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ArticleSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.full_name', read_only=True)
-    category_name = CategorySerializer(source='category.name', read_only=True)
-    category_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='category', write_only=True)
+
+    author_name = serializers.CharField(
+        source="author.full_name",
+        read_only=True
+    )
+
+    category_name = serializers.CharField(
+        source="category.name",
+        read_only=True
+    )
+
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all()
+    )
 
     class Meta:
         model = Article
-        fields = '__all__'
-        
-    read_only_fields = ('author_name', 'view_count')
-    
+
+        fields = [
+            "id",
+            "author",
+            "author_name",
+            "category",
+            "category_name",
+            "title",
+            "slug",
+            "featured_image",
+            "excerpt",
+            "content",
+            "view_count",
+            "is_featured",
+            "status",
+            "published_at",
+            "created_at",
+            "updated_at",
+        ]
+
+        read_only_fields = [
+            "author",
+            "view_count",
+            "published_at",
+            "created_at",
+            "updated_at",
+        ]

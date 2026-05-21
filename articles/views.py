@@ -11,7 +11,51 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from articles.models import Article, Category
 from articles.serializers import ArticleSerializer, CategorySerializer
 from articles.permissions import ArticlePermission
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiExample
 
+
+@extend_schema_view(
+    list=extend_schema(
+       tags=['Articles'],
+       summary='List all articles',
+        description='Retrieve a list of all articles. Supports filtering, searching, and ordering.',
+    ),
+    retrieve=extend_schema(
+        tags=['Articles'],
+        summary='Retrieve an article',
+        description='Get the details of a specific article by its slug.',
+    ),
+    create=extend_schema(
+        tags=['Articles'],
+        summary='Create a new article',
+        description='Create a new article. Requires authentication and appropriate permissions.',
+    ),
+    update=extend_schema(
+        tags=['Articles'],
+        summary='Update an article',
+        description='Update an existing article. Requires authentication and appropriate permissions.',
+    ),
+    partial_update=extend_schema(
+        tags=['Articles'],
+        summary='Partially update an article',
+        description='Partially update an existing article. Requires authentication and appropriate permissions.',
+    ),
+    destroy=extend_schema(
+        tags=['Articles'],
+        summary='Delete an article',
+        description='Delete an existing article. Requires authentication and appropriate permissions.', 
+    ),
+    
+    publish=extend_schema(
+        summary='Publish an article',
+        description='Publish a draft article. Only users with admin, editor, or superadmin roles can publish articles.',
+    ),
+    unpublish=extend_schema(
+        summary='Unpublish an article',
+        description='Unpublish a published article. Only users with admin, editor, or superadmin roles can unpublish articles.',
+    )
+    
+)
 
 class ArticleViewSet(viewsets.ModelViewSet):
 
@@ -116,7 +160,38 @@ class ArticleViewSet(viewsets.ModelViewSet):
             'article': serializer.data
         })
         
-    
+@extend_schema_view(
+    list=extend_schema(
+       tags=['Categories'],
+       summary='List all categories',
+        description='Retrieve a list of all categories.',
+    ),
+    retrieve=extend_schema(
+        tags=['Categories'],
+        summary='Retrieve a category',
+        description='Get the details of a specific category by its slug.',
+    ),
+    create=extend_schema(
+        tags=['Categories'],
+        summary='Create a new category',
+        description='Create a new category. Requires authentication and appropriate permissions.',
+    ),
+    update=extend_schema(
+        tags=['Categories'],
+        summary='Update a category',
+        description='Update an existing category. Requires authentication and appropriate permissions.',
+    ),
+    partial_update=extend_schema(
+        tags=['Categories'],
+        summary='Partially update a category',
+        description='Partially update an existing category. Requires authentication and appropriate permissions.',
+    ),
+    destroy=extend_schema(
+        tags=['Categories'],
+        summary='Delete a category',
+        description='Delete an existing category. Requires authentication and appropriate permissions.', 
+    )
+)
 class CategoryViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()

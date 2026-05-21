@@ -47,10 +47,12 @@ from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiPara
     ),
     
     publish=extend_schema(
+        tags=['Articles'],
         summary='Publish an article',
         description='Publish a draft article. Only users with admin, editor, or superadmin roles can publish articles.',
     ),
     unpublish=extend_schema(
+        tags=['Articles'],
         summary='Unpublish an article',
         description='Unpublish a published article. Only users with admin, editor, or superadmin roles can unpublish articles.',
     )

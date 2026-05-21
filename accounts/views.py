@@ -1,21 +1,24 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, serializers as drf_serializers
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from accounts.models import User
-from accounts.serializers import UserSerializer, RegisterSerializer, UpdateProfileSerializer, RoleUpdateSerializer  
+from accounts.serializers import UserSerializer, RegisterSerializer, UpdateProfileSerializer, RoleUpdateSerializer
 
 from accounts.permissions import IsSuperAdmin, IsAdmin, IsEditor, IsJournalist, IsReader
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema_view, extend_schema, OpenApiParameter, OpenApiExample,
+    inline_serializer,
+)
 
 
 @extend_schema_view(
     list=extend_schema(
         tags=['Users'],
         summary='List all users',
-        description='Retrieve a list of all users.',
+        description='Retrieve a paginated list of all users. Requires authentication.',
     ),
     retrieve=extend_schema(
         tags=['Users'],
@@ -25,12 +28,14 @@ from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiPara
     create=extend_schema(
         tags=['Users'],
         summary='Create a new user',
-        description='Create a new user. Requires authentication and appropriate permissions.',
+        description='Create a new user account directly. For public self-registration use the `/register` endpoint. Requires authentication.',
+        request=RegisterSerializer,
+        responses={201: UserSerializer},
     ),
     update=extend_schema(
         tags=['Users'],
         summary='Update a user',
-        description='Update an existing user. Requires authentication and appropriate permissions.',
+        description='Fully update an existing user. Requires authentication and appropriate permissions.',
     ),
     partial_update=extend_schema(
         tags=['Users'],
@@ -40,8 +45,105 @@ from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiPara
     destroy=extend_schema(
         tags=['Users'],
         summary='Delete a user',
-        description='Delete an existing user. Requires authentication and appropriate permissions.',
-    )
+        description='Permanently delete a user account. Requires superadmin or admin permissions.',
+    ),
+    register=extend_schema(
+        tags=['Authentication'],
+        summary='Register a new user',
+        description='Create a new user account. No authentication required.',
+        request=RegisterSerializer,
+        responses={201: UserSerializer},
+    ),
+    login=extend_schema(
+        tags=['Authentication'],
+        summary='Login',
+        description='Authenticate with email and password to receive JWT access and refresh tokens.',
+        request=inline_serializer(
+            name='UserLoginRequest',
+            fields={
+                'email': drf_serializers.EmailField(help_text='Registered email address'),
+                'password': drf_serializers.CharField(
+                    help_text='Account password',
+                    style={'input_type': 'password'},
+                ),
+            },
+        ),
+        responses={
+            200: inline_serializer(
+                name='UserLoginResponse',
+                fields={
+                    'refresh': drf_serializers.CharField(help_text='JWT refresh token'),
+                    'access': drf_serializers.CharField(help_text='JWT access token'),
+                    'user': UserSerializer(),
+                },
+            ),
+            401: inline_serializer(
+                name='LoginUnauthorizedResponse',
+                fields={'detail': drf_serializers.CharField()},
+            ),
+            403: inline_serializer(
+                name='LoginForbiddenResponse',
+                fields={'detail': drf_serializers.CharField()},
+            ),
+        },
+    ),
+    update_profile=extend_schema(
+        tags=['Users'],
+        summary='Update profile',
+        description='Update the profile fields of a specific user. Users can update their own profile; admins and superadmins can update any profile.',
+        request=UpdateProfileSerializer,
+        responses={200: UserSerializer},
+    ),
+    update_role=extend_schema(
+        tags=['Users'],
+        summary='Change user role',
+        description='Assign a new role to a user (reader, journalist, editor, admin, superadmin). Only superadmins can perform this action.',
+        request=RoleUpdateSerializer,
+        responses={200: UserSerializer},
+    ),
+    me=extend_schema(
+        tags=['Users'],
+        summary='Get current user',
+        description='Retrieve the profile of the currently authenticated user.',
+        responses={200: UserSerializer},
+    ),
+    search=extend_schema(
+        tags=['Users'],
+        summary='Search users',
+        description='Search for users by email, first name, or last name using the `q` query parameter.',
+        parameters=[
+            OpenApiParameter(
+                name='q',
+                description='Search query — matched against email, first name, and last name.',
+                required=True,
+                type=str,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+        responses={200: UserSerializer(many=True)},
+    ),
+    deactivate=extend_schema(
+        tags=['Users'],
+        summary='Deactivate a user',
+        description='Deactivate a user account, preventing them from logging in. Requires admin or superadmin permissions.',
+        responses={
+            200: inline_serializer(
+                name='DeactivateUserResponse',
+                fields={'detail': drf_serializers.CharField()},
+            ),
+        },
+    ),
+    activate=extend_schema(
+        tags=['Users'],
+        summary='Activate a user',
+        description='Re-activate a previously deactivated user account. Requires admin or superadmin permissions.',
+        responses={
+            200: inline_serializer(
+                name='ActivateUserResponse',
+                fields={'detail': drf_serializers.CharField()},
+            ),
+        },
+    ),
 )
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

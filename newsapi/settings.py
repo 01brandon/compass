@@ -68,7 +68,7 @@ ROOT_URLCONF = 'newsapi.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -167,39 +167,62 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'NewsAPI',
+    'TITLE': 'Compass NewsAPI',
     'DESCRIPTION': """
-        A news API built with Django REST Framework
-        
-        Features:
-        - User registration and authentication with JWT
-        - Role-based access control (superadmin, admin, editor, journalist, reader)
-        - CRUD operations for articles and categories
-        - Article publishing workflow with status management
-        - Article filtering, searching, and ordering
-        - Cloudinary integration for media management
-        - Comprehensive API documentation with drf-spectacular
-        """,
+## Overview
+A full-featured news platform API built with Django REST Framework.
+
+## Authentication
+All protected endpoints require a **JWT Bearer token**. Obtain tokens via the `/auth/login/` endpoint and include them in the `Authorization` header:
+```
+Authorization: Bearer <access_token>
+```
+
+## Features
+- **Authentication** — JWT-based login & registration
+- **Role-based access control** — superadmin, admin, editor, journalist, reader
+- **Articles** — Full CRUD with publish/unpublish workflow
+- **Categories** — Article categorization
+- **Filtering & Search** — Filter by status, category, featured; search by title/content
+- **Ordering** — Sort by published date, created date, or view count
+- **Cloudinary** — Media management for profile pictures and article images
+    """,
     'VERSION': '1.0.0',
-    
+    'CONTACT': {
+        'name': 'Compass NewsAPI Support',
+        'email': 'support@compass-news.api',
+    },
+    'LICENSE': {
+        'name': 'MIT',
+    },
+
     'SERVE_INCLUDE_SCHEMA': False,
-    
+
     'SWAGGER_UI_SETTINGS': {
         'deepLinking': True,
         'persistAuthorization': True,
+        'displayOperationId': False,
+        'defaultModelsExpandDepth': 1,
+        'defaultModelExpandDepth': 2,
+        'docExpansion': 'list',
+        'filter': True,
+        'showExtensions': True,
+        'showCommonExtensions': True,
+        'tryItOutEnabled': False,
+        'syntaxHighlight.activate': True,
+        'syntaxHighlight.theme': 'monokai',
     },
-    
-    'COMPLETE_SPLIT_REQUEST': True,
-    
+
+    'COMPONENT_SPLIT_REQUEST': True,
+
     'TAGS': [
-        {'name': 'Authentication', 'description': 'Endpoints for user registration, login, and role management.'},
-        {'name': 'Articles', 'description': 'Endpoints for creating, retrieving, updating, and deleting articles.'},
-        {'name': 'Categories', 'description': 'Endpoints for managing article categories.'},
+        {'name': 'Authentication', 'description': 'User registration, login, and token management.'},
+        {'name': 'Users', 'description': 'User management, profile updates, role assignments, and account activation.'},
+        {'name': 'Articles', 'description': 'Create, read, update, delete, publish, and unpublish news articles.'},
+        {'name': 'Categories', 'description': 'Manage article categories.'},
     ],
-    
-    
-    
-    
+
+    'SECURITY': [{'jwtAuth': []}],
 }
 
 # Simple JWT configuration: set token lifetimes

@@ -44,7 +44,9 @@ class LoginAPIView(TokenObtainPairView):
     post=extend_schema(
         tags=['Authentication'],
         summary='Register',
-        description='Register a new user account.',
+        description='Register a new user account. No authentication required.',
+        request=RegisterSerializer,
+        responses={201: UserSerializer},
     )
 )
 class RegisterAPIView(APIView):

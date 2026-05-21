@@ -8,6 +8,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 from accounts.models import User
 from accounts.serializers import RegisterSerializer, UserSerializer
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiExample
 
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -27,12 +28,25 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["user"] = UserSerializer(self.user).data
         return data
 
-
+@extend_schema_view(
+    post=extend_schema(
+        tags=['Authentication'],
+        summary='Login',
+        description='Authenticate a user and obtain JWT tokens.',
+    )
+)
 class LoginAPIView(TokenObtainPairView):
     permission_classes = [AllowAny]
     serializer_class = EmailTokenObtainPairSerializer
 
 
+@extend_schema_view(
+    post=extend_schema(
+        tags=['Authentication'],
+        summary='Register',
+        description='Register a new user account.',
+    )
+)
 class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
 

@@ -166,6 +166,42 @@ REST_FRAMEWORK = {
     
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'NewsAPI',
+    'DESCRIPTION': """
+        A news API built with Django REST Framework
+        
+        Features:
+        - User registration and authentication with JWT
+        - Role-based access control (superadmin, admin, editor, journalist, reader)
+        - CRUD operations for articles and categories
+        - Article publishing workflow with status management
+        - Article filtering, searching, and ordering
+        - Cloudinary integration for media management
+        - Comprehensive API documentation with drf-spectacular
+        """,
+    'VERSION': '1.0.0',
+    
+    'SERVE_INCLUDE_SCHEMA': False,
+    
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+    },
+    
+    'COMPLETE_SPLIT_REQUEST': True,
+    
+    'TAGS': [
+        {'name': 'Authentication', 'description': 'Endpoints for user registration, login, and role management.'},
+        {'name': 'Articles', 'description': 'Endpoints for creating, retrieving, updating, and deleting articles.'},
+        {'name': 'Categories', 'description': 'Endpoints for managing article categories.'},
+    ],
+    
+    
+    
+    
+}
+
 # Simple JWT configuration: set token lifetimes
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
